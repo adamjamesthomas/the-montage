@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import * as ReadableAPI from './utils/ReadableAPI.js'
-import {getPosts, changePostSort, votePost, getCommentCount} from './actions/index.js'
+import {fetchPosts, fetchCategoryPosts, changePostSort, votePost, deletePost} from './actions/index.js'
 import { connect } from 'react-redux'
 
 class ListContacts extends Component {
@@ -15,29 +15,12 @@ state = {
 }
 componentDidMount() {
     if(this.props.category === "all"){
-            ReadableAPI.getAllPosts().then((posts) => {    
-                this.props.dispatch(getPosts({
-                    posts
-                  }))
-                posts.forEach(function(post) {
-                    ReadableAPI.getComments(post.id).then((comments) => {
-                        this.props.dispatch(getCommentCount(post.id, comments.length))
-                    })
-                }, this)
-              })
-        }
-        else{
-            ReadableAPI.getCategoryPosts(this.props.category).then((posts) => {    
-                this.props.dispatch(getPosts({
-                    posts
-                  }))
-                  posts.forEach(function(post) {
-                    ReadableAPI.getComments(post.id).then((comments) => {
-                        this.props.dispatch(getCommentCount(post.id, comments.length))
-                    })
-                }, this)
-              })
-        }
+        this.props.dispatch(fetchPosts(this.props.dispatch))
+    }
+    else{
+        this.props.dispatch(fetchCategoryPosts(this.props.category, this.props.dispatch))
+    }
+    
 }
 sortTop = () => {
     this.props.dispatch(changePostSort("top"));
@@ -51,6 +34,11 @@ handleVotePost = (postid, option) =>  {
     var increment = (option === "upVote") ? 1 : -1
     ReadableAPI.votePost(postid, option).then (() => {
         this.props.dispatch(votePost(postid, increment))
+    })
+}
+handleDelete = (id, type) =>  {
+    ReadableAPI.deletePost(id).then (() => {
+        this.props.dispatch(deletePost(id))
     })
 }
 
@@ -75,14 +63,18 @@ render() {
                             </div>
                         </div>
                         <div className="post-list-item-right">
-                            <Link className="post-list-item-view" to={"/post/" + post.id}>View</Link>
+                            <Link className="post-list-item-view" to={"/"+post.category+"/" + post.id}>View</Link>
                         </div>
                     <div className='post-list-item-body'>
                         <p className="post-title">{post.title}</p>
                         <p className="post-author"> by {post.author}</p>
+                        
                     </div>
                     <div className="post-comment-count">{post.commentCount} Comments </div>
-                    
+                    <div className = "post-alter">
+                            <Link to={"/createpost/edit/" + post.id } className='link-button'>Edit</Link>
+                            <button onClick={() => this.handleDelete(post.id, "post")}> Delete </button>
+                        </div>
                     </li>
                 ))}
                 </ol>

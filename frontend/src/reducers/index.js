@@ -1,22 +1,22 @@
 import {
-    GET_POSTS,
-    GET_POST_DETAILS,
-    GET_CATEGORY_POSTS,
+    RECEIVE_POSTS,
+    RECEIVE_POST_DETAILS,
     CHANGE_POST_SORT,
-    GET_CATEGORIES,
+    RECEIVE_CATEGORIES,
     ADD_POST,
     VOTE_POST,
-    GET_COMMENTS,
+    RECEIVE_COMMENTS,
     ADD_COMMENT,
     DELETE_COMMENT,
     DELETE_POST,
     VOTE_COMMENT,
     EDIT_COMMENT,
     CHANGE_COMMENT_SORT,
-    GET_COMMENT_COUNT
+    START_LOAD
 } from '../actions'
 
 const initialPostsState = {
+    loading: [],
     categories: [],
     posts: [],
     comments: [],
@@ -30,10 +30,15 @@ function posts (state = initialPostsState, action) {
     var updatedComments;
     var updatedPosts;
     switch (action.type) {
-        case GET_POSTS :
+        case START_LOAD :
+        return {
+            ...state,
+            loading: state.loading.concat(action.loadType)
+        }
+        case RECEIVE_POSTS :
         return {
             ...state, 
-            posts: action.posts.posts
+            posts: action.posts
         }
         case ADD_POST :
         return {
@@ -98,38 +103,37 @@ function posts (state = initialPostsState, action) {
             ...state, 
             comments: updatedComments
         }
-        case GET_POST_DETAILS :
-        return {
-            ...state, 
-            postDetails: action.postDetails.post
+        case RECEIVE_POST_DETAILS :
+        var index = state.loading.indexOf("POST_DETAILS")
+        var newLoad = state.loading.slice();
+        if (index > -1) {
+            newLoad.splice(index, 1)
         }
-        case GET_COMMENT_COUNT :
-        updatedPosts = state.posts.slice()
-        updatedPosts.forEach(function(post) {
-            if (post.id === action.postid) {
-                post.commentCount = action.commentCount
-            }
-        })
         return {
             ...state, 
-            posts: updatedPosts
+            postDetails: action.postDetails,
+            loading: newLoad
         }
-        case GET_CATEGORY_POSTS :
-        return {}
-        case GET_CATEGORIES :
+        case RECEIVE_CATEGORIES :
         return {
             ...state, 
-            categories: action.categories.categories
+            categories: action.categories
         }
         case CHANGE_POST_SORT :
         return {
             ...state, 
             postSort: action.newSort
         }
-        case GET_COMMENTS :
+        case RECEIVE_COMMENTS :
+        var index = state.loading.indexOf("COMMENTS")
+        newLoad = state.loading.slice();
+        if (index > -1) {
+            newLoad.splice(index, 1)
+        }
         return {
             ...state, 
-            comments: action.comments.comments
+            comments: action.comments,
+            loading: newLoad
         }
         case ADD_COMMENT :
         return {

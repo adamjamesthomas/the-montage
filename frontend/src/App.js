@@ -4,9 +4,8 @@ import { Route, Link, withRouter } from 'react-router-dom'
 import Post from './Post';
 import PostList from './PostList';
 import CreatePost from './CreatePost';
-import * as ReadableAPI from './utils/ReadableAPI.js'
 import './App.css';
-import {getCategories} from './actions/index.js'
+import {fetchCategories} from './actions/index.js'
 import { connect } from 'react-redux'
 
 class App extends Component {
@@ -15,18 +14,7 @@ class App extends Component {
     posts: []
   }
   componentDidMount() {
-    ReadableAPI.getCategories().then((categories) => {    
-      this.props.dispatch(getCategories({
-        categories
-      }))
-    })
-  }
-  submitComment(comment) {
-    ReadableAPI.submitPost(comment).then(comment => {
-      this.setState(state => ({
-        comments: state.comments.concat([ comment ])
-      }))
-    })
+      this.props.dispatch(fetchCategories(this.props.dispatch))
   }
    
   render() {
@@ -59,25 +47,25 @@ class App extends Component {
           <PostList category="all"
            />
         )} />
-        <Route path = "/frontpage" render={() => (
+        <Route exact path = "/frontpage" render={() => (
           <PostList category="all"
            />
         )} />
-        <Route path = "/rocketleague" render={() => (
+        <Route exact path = "/rocketleague" render={() => (
           <PostList category="rocketleague"
           />
         )} />
-        <Route path = "/pubg" render={() => (
+        <Route exact path = "/pubg" render={() => (
           <PostList category="pubg"
           />
         )} />
-        <Route path = "/hots" render={() => (
+        <Route exact path = "/hots" render={() => (
           <PostList category="hots"
           />
         )} />
-        <Route path = "/post/:postid" component={Post} 
+        <Route exact path = "/:category/:postid" component={Post} 
          />
-        <Route path = "/createpost/:postid?" render={() => (
+        <Route path = "/createpost/edit/:postid?" render={() => (
           <CreatePost  />
         )} />
       </div>

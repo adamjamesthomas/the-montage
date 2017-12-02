@@ -40,6 +40,9 @@ button {
   transform-origin: 50% 50% 0;
   text-decoration: none;
 }
+.post-alter {
+  display: inline-block
+}
 .link-button {
   display: inline-block;
 -webkit-box-sizing: content-box;
@@ -393,6 +396,15 @@ ol.post-comment-list{
 .create-post-details-label {
   width: 100px;
   text-align: left;
+}
+.error {
+ clear: both;
+  padding: 20px;
+  background: #d6d6d6;
+  border: 1px solid black;
+  margin: 8px 60px;
+  height: 40px;
+  
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

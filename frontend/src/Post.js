@@ -3,8 +3,9 @@ import { Link, withRouter, Redirect } from 'react-router-dom';
 import * as ReadableAPI from './utils/ReadableAPI.js'
 import serializeForm from 'form-serialize';
 import {
-    getPostDetails, getComments, addComment, changeCommentSort, 
-    voteComment, votePost, editComment, deletePost, deleteComment} from './actions/index.js'
+    fetchPostDetails, fetchComments, addComment, changeCommentSort, 
+    voteComment, votePost, editComment, deletePost, deleteComment,
+    startLoad} from './actions/index.js'
 import { connect } from 'react-redux'
 
 class Post extends Component {
@@ -14,16 +15,13 @@ class Post extends Component {
         redirect: false
       }
     componentDidMount() {
-        ReadableAPI.getPostDetails(this.props.match.params.postid).then((post) => {    
-          this.props.dispatch(getPostDetails({ 
-              post 
-            }))
-        })
-        ReadableAPI.getComments(this.props.match.params.postid).then((comments) => {    
-            this.props.dispatch(getComments({ 
-                comments 
-              }))
-          })
+        this.props.dispatch(startLoad("POST_DETAILS"))
+        this.props.dispatch(startLoad("COMMENTS"))
+        
+        this.props.dispatch(fetchPostDetails(this.props.match.params.postid, this.props.dispatch))
+        this.props.dispatch(fetchComments(this.props.match.params.postid, this.props.dispatch)) 
+
+   
     }
     handleSubmit = (e) => {
         e.preventDefault()
@@ -94,12 +92,15 @@ class Post extends Component {
     }
 
     render() {
-        const {post, comments} = this.props;      
+        const {post, comments, loading} = this.props;    
         if (this.state.redirect)
             {
               return <Redirect push to={"/frontpage"} />
             }
-        if(post) {
+        if(loading.length === 0 && post) {
+            if(post.id === undefined){
+                    return <div className='error'> Sorry, the post you're trying to access has been removed. </div>
+                }
         return (
           <div className="post">
               <div className = "post-score">
@@ -187,21 +188,25 @@ class Post extends Component {
     }
 }
 function mapStateToProps (state) {
-    const sortedComments = state.comments
-    if (state.commentSort === "top") {
-        sortedComments.sort(function(a,b){
-            if(a.voteScore === b.voteScore) return 0;
-            return a.voteScore < b.voteScore ? 1 : -1;
-        })
-        
-    }
-    else {
-        sortedComments.sort(function(a,b){
-            if(a.timestamp === b.timestamp) return 0;
-            return a.timestamp < b.timestamp ? 1 : -1;
-        })
-    }
+    var sortedComments = null;
+    if(state.comments){
+            sortedComments = state.comments
+            if (state.commentSort === "top") {
+                sortedComments.sort(function(a,b){
+                    if(a.voteScore === b.voteScore) return 0;
+                    return a.voteScore < b.voteScore ? 1 : -1;
+                })
+                
+            }
+            else {
+                sortedComments.sort(function(a,b){
+                    if(a.timestamp === b.timestamp) return 0;
+                    return a.timestamp < b.timestamp ? 1 : -1;
+                })
+            }
+        }
     return {
+        loading: state.loading,
         post: state.postDetails,
         comments: sortedComments,
         commentSort: state.commentSort

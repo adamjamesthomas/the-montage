@@ -4,7 +4,7 @@ import serializeForm from 'form-serialize';
 import * as ReadableAPI from './utils/ReadableAPI.js'
 import { addPost } from './actions/index.js'
 import { connect } from 'react-redux'
-import {getPostDetails} from './actions/index.js'
+import {receivePostDetails} from './actions/index.js'
 
 
 class CreatePost extends Component {
@@ -22,7 +22,7 @@ class CreatePost extends Component {
     if(this.props.match.params.postid) {
       
       ReadableAPI.getPostDetails(this.props.match.params.postid).then((post) => {    
-        this.props.dispatch(getPostDetails({ 
+        this.props.dispatch(receivePostDetails({ 
             post 
           }))
           this.setState({
