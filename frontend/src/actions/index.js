@@ -1,19 +1,21 @@
 import * as ReadableAPI from '../utils/ReadableAPI.js'
+import {
+    RECEIVE_POSTS,
+    RECEIVE_POST_DETAILS,
+    RECEIVE_COMMENTS,
+    ADD_COMMENT,
+    DELETE_COMMENT,
+    DELETE_POST,
+    VOTE_COMMENT,
+    EDIT_COMMENT,
+    CHANGE_COMMENT_SORT,
+    CHANGE_POST_SORT,
+    ADD_POST,
+    VOTE_POST,
+    RECEIVE_CATEGORIES,
+    START_LOAD
+} from './types.js'
 
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-export const RECEIVE_POST_DETAILS = 'RECEIVE_POST_DETAILS'
-export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
-export const ADD_COMMENT = 'ADD_COMMENT'
-export const DELETE_COMMENT = 'DELETE_COMMENT'
-export const DELETE_POST = 'DELETE_POST'
-export const VOTE_COMMENT = 'VOTE_COMMENT'
-export const EDIT_COMMENT = 'EDIT_COMMENT'
-export const CHANGE_COMMENT_SORT = 'CHANGE_COMMENT_SORT'
-export const CHANGE_POST_SORT = 'CHANGE_POST_SORT'
-export const ADD_POST = 'ADD_POSTS'
-export const VOTE_POST = 'VOTE_POST'
-export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
-export const START_LOAD = 'START_LOAD'
 
 export function startLoad (loadType) {
     return {

@@ -13,7 +13,7 @@ import {
     EDIT_COMMENT,
     CHANGE_COMMENT_SORT,
     START_LOAD
-} from '../actions'
+} from '../actions/types.js'
 
 const initialPostsState = {
     loading: [],
@@ -125,7 +125,7 @@ function posts (state = initialPostsState, action) {
             postSort: action.newSort
         }
         case RECEIVE_COMMENTS :
-        var index = state.loading.indexOf("COMMENTS")
+        index = state.loading.indexOf("COMMENTS")
         newLoad = state.loading.slice();
         if (index > -1) {
             newLoad.splice(index, 1)

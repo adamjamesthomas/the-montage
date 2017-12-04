@@ -68,6 +68,9 @@ class App extends Component {
         <Route path = "/createpost/edit/:postid?" render={() => (
           <CreatePost  />
         )} />
+        <Route exact path = "/createpost" render={() => (
+          <CreatePost  />
+        )} />
       </div>
     );
   } 

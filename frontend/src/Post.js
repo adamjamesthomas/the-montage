@@ -125,7 +125,7 @@ class Post extends Component {
                 {this.timeStampToDateString(post.timestamp)}
             </div>
             <div className = "post-alter">
-            <Link to={"/createpost/" + post.id } className='link-button'>Edit</Link>
+            <Link to={"/createpost/edit/" + post.id } className='link-button'>Edit</Link>
             <button onClick={() => this.handleDelete(post.id, "post")}> Delete </button>
             </div>
             <div className = "post-comments">
